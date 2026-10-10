@@ -1,0 +1,19 @@
+# Lityra LMS runtime registry
+auth auth 8001
+institution institution 8002
+learner learner 8003
+curriculum curriculum 8004
+content content 8005
+progress progress 8006
+assessment assessment 8007
+gamification gamification 8008
+certification certification 8009
+coding coding 8016
+notification notification 8020
+files files 8021
+analytics analytics 8022
+audit audit 8023
+ai_orchestration ai_orchestration 8024
+ai_tutor ai_tutor 8025
+organization organization 8026
+gateway gateway 8000
