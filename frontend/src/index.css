@@ -959,6 +959,39 @@ input:focus, select:focus, textarea:focus { border-color: #bf984f !important; bo
   }
 }
 
+/* On phones the sidebar is an overlay drawer, never a reserved grid column. */
+@media (max-width: 1023px) {
+  .app-frame {
+    display: block !important;
+    width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+  }
+  .app-workspace-column {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    grid-column: auto !important;
+  }
+  .app-sidebar {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    width: min(86vw, 320px) !important;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    transform: translateX(-100%) !important;
+    transition: transform .24s cubic-bezier(.2,.75,.25,1);
+  }
+  .app-sidebar[data-mobile-open="true"] {
+    transform: translateX(0) !important;
+  }
+}
+
 
 /* Product-specific version of the premium combined landing page. */
 .product-landing .landing-loop-section { color:#f7f4ec; }
@@ -1009,3 +1042,47 @@ input:focus, select:focus, textarea:focus { border-color: #bf984f !important; bo
 .product-landing-company > a { display:inline-flex; align-items:center; gap:.35rem; margin-top:.2rem; color:#dfbf7c; font-size:.7rem; font-weight:700; text-decoration:none; }
 .product-landing-company > a:hover { color:#fff; }
 @media (max-width:700px) { .product-landing-company { justify-items:start; text-align:left; } }
+
+/* Project-based learning sections: editorial alignment with restrained depth and motion. */
+.lityra-learning-section { isolation:isolate; }
+.lityra-learning-section::before { position:absolute; z-index:0; top:5%; right:5%; width:clamp(8rem,18vw,15rem); aspect-ratio:1; content:""; pointer-events:none; border-radius:50%; opacity:.56; background:radial-gradient(circle at 32% 27%,#fff8d9 0 3%,#e3c36f 12%,#7bb8e2 42%,#315b92 66%,rgba(36,69,115,.08) 72%); box-shadow:inset -16px -20px 35px rgba(4,15,35,.35),0 24px 55px rgba(4,15,35,.2); transform:translateZ(0); }
+.lityra-learning-section::after { position:absolute; z-index:0; top:clamp(3rem,9vw,8rem); right:-3rem; width:clamp(13rem,28vw,25rem); aspect-ratio:1; content:""; pointer-events:none; border:1px solid rgba(199,166,99,.18); border-radius:50%; box-shadow:0 0 0 18px rgba(199,166,99,.035),0 0 0 42px rgba(109,166,210,.025); }
+.lityra-learning-section > .relative { z-index:1; }
+.lityra-learning-section .learning-copy p,
+.lityra-learning-section .learning-grid li p,
+.lityra-learning-section .learning-extended p { text-align:justify; text-justify:inter-word; hyphens:auto; }
+.lityra-learning-section .learning-grid li,
+.lityra-learning-section article { transform-style:preserve-3d; transition:transform .35s cubic-bezier(.2,.75,.25,1),box-shadow .35s ease,border-color .35s ease; }
+.lityra-learning-section .learning-grid li:hover,
+.lityra-learning-section article:hover { transform:perspective(900px) translateY(-5px) rotateX(1.2deg) rotateY(-.7deg); box-shadow:0 20px 44px rgba(0,0,0,.2); border-color:rgba(226,191,113,.5); }
+.lityra-learning-section blockquote { transform-style:preserve-3d; transition:transform .35s ease,box-shadow .35s ease; }
+.lityra-learning-section blockquote:hover { transform:perspective(1000px) translateY(-3px) rotateX(1deg); box-shadow:0 24px 55px rgba(16,37,65,.2); }
+@keyframes learning-section-enter { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes learning-orb-float { 0%,100% { transform:translate3d(0,0,0); } 50% { transform:translate3d(-7px,10px,12px); } }
+@media (prefers-reduced-motion:no-preference) {
+  .lityra-learning-section::before { animation:learning-orb-float 8s ease-in-out infinite; }
+  .lityra-learning-section .learning-copy { animation:learning-section-enter .65s both; }
+  .lityra-learning-section .learning-grid li,
+  .lityra-learning-section .learning-extended article { animation:learning-section-enter .65s both; }
+  .lityra-learning-section .learning-grid li:nth-child(2),
+  .lityra-learning-section .learning-extended article:nth-child(2) { animation-delay:.08s; }
+  .lityra-learning-section .learning-grid li:nth-child(3) { animation-delay:.14s; }
+  .lityra-learning-section .learning-grid li:nth-child(4) { animation-delay:.2s; }
+  .lityra-learning-section .learning-grid li:nth-child(5) { animation-delay:.26s; }
+  .lityra-learning-section .learning-grid li:nth-child(6) { animation-delay:.32s; }
+  .lityra-learning-section .learning-grid li:nth-child(7) { animation-delay:.38s; }
+  .lityra-learning-section .learning-grid li:nth-child(8) { animation-delay:.44s; }
+  .lityra-learning-section .learning-grid li:nth-child(9) { animation-delay:.5s; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .lityra-learning-section .learning-grid li,
+  .lityra-learning-section article,
+  .lityra-learning-section blockquote { transition:none; }
+}
+@media (max-width:700px) {
+  .lityra-learning-section::before { top:2%; right:-1rem; opacity:.32; }
+  .lityra-learning-section::after { right:-7rem; opacity:.65; }
+  .lityra-learning-section .learning-copy p,
+  .lityra-learning-section .learning-grid li p,
+  .lityra-learning-section .learning-extended p { font-size:.95rem; line-height:1.75; }
+}

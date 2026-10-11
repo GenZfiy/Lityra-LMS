@@ -6,11 +6,9 @@ import {
   BookOpen,
   Trophy,
   Briefcase,
-  FileCheck2,
   BarChart3,
   Code2,
   Building2,
-  FileStack,
   Award,
   Sparkles,
   ClipboardList,
@@ -23,7 +21,6 @@ import {
   Bell,
   Brain,
   Compass,
-  Target,
   Repeat,
   Wallet as WalletIcon,
   Gauge,
@@ -43,7 +40,6 @@ import { api } from "../../lib/api.js";
 
 const CareerConstellation = lazy(() => import("../ui/CareerConstellation.jsx").then((module) => ({ default: module.CareerConstellation })));
 
-const RECRUITER_ROLES = ["recruiter", "company_admin", "super_admin"];
 const STAFF_ROLES = ["super_admin", "company_admin", "college_admin", "trainer"];
 const PLATFORM_ADMIN = ["super_admin", "company_admin"];
 const ANALYTICS_ROLES = ["super_admin", "company_admin", "college_admin",
@@ -52,11 +48,8 @@ const CONTENT_AUTHOR_ROLES = ["super_admin", "company_admin", "college_admin", "
 const TRAINING_CENTER_ROLES = ["super_admin", "company_admin", "college_admin", "principal", "dean", "hod", "trainer", "faculty"];
 const STUDENT = ["student"];
 
-// Two standalone apps on one platform. Each product owns its own nav; they never
-// appear together. Every item declares which roles may see it — students see only
-// student pages, admins/recruiters only theirs. Items with no `roles` are shown
-// to everyone in that app. Shared pages (profile/settings/notifications) live
-// under each product's base path so the sidebar context stays consistent.
+// Lityra Learn navigation. Every item declares which Learn roles may see it;
+// shared Learn pages live under the /lms base path.
 export const PRODUCTS = {
   lms: {
     key: "lms",
@@ -106,36 +99,7 @@ export const PRODUCTS = {
         ],
       },
     ],
-    switchTo: { label: "Switch to Hire", to: "/drive" },
     home: "/lms",
-  },
-  drive: {
-    key: "drive",
-    title: "Lityra Hire",
-    tagline: "Write Your Future",
-    icon: Briefcase,
-    pill: "bg-amber-500/10 text-amber-700 ring-1 ring-amber-500/20",
-    tile: "bg-gradient-to-br from-amber-500 to-amber-600",
-    base: "/drive",
-    gamified: false,
-    // Students only browse & take their drive tests here. No LMS anything.
-    items: [
-      { to: "/drive", icon: Briefcase, label: "My Drives", end: true, roles: STUDENT },
-      { to: "/drive/opportunities", icon: Target, label: "Matched Opportunities", roles: STUDENT },
-    ],
-    sections: [
-      {
-        title: "Recruiter",
-        roles: RECRUITER_ROLES,
-        items: [
-          { to: "/drive/recruiter/drives", icon: Building2, label: "Manage Drives" },
-          { to: "/drive/recruiter/access-codes", icon: KeyRound, label: "Drive Access IDs" },
-          { to: "/drive/recruiter/questions", icon: FileStack, label: "Question Bank" },
-        ],
-      },
-    ],
-    switchTo: { label: "Switch to Learn", to: "/lms" },
-    home: "/drive",
   },
 };
 
@@ -152,7 +116,7 @@ function currentSection(pathname, cfg) {
   const item = [...cfg.items, ...cfg.sections.flatMap((section) => section.items)]
     .filter((entry) => entry.to !== cfg.base && pathname.startsWith(entry.to))
     .sort((a, b) => b.to.length - a.to.length)[0];
-  return item?.label || (pathname === cfg.base ? (cfg.key === "drive" ? "Hiring workspace" : "Learning workspace") : "Workspace");
+  return item?.label || (pathname === cfg.base ? "Learning workspace" : "Workspace");
 }
 
 export function AppShell({ children, product = "lms" }) {
@@ -167,7 +131,6 @@ export function AppShell({ children, product = "lms" }) {
   const roles = user?.roles || [];
 
   useEffect(() => {
-    if (cfg.key !== "lms") return;
     if (roles.some((role) => ["super_admin", "company_admin"].includes(role))) {
       setHasAssignedTrainingCenter(true);
       return;
@@ -181,7 +144,7 @@ export function AppShell({ children, product = "lms" }) {
       .then((centers) => { if (live) setHasAssignedTrainingCenter(Array.isArray(centers) && centers.length > 0); })
       .catch(() => { if (live) setHasAssignedTrainingCenter(false); });
     return () => { live = false; };
-  }, [cfg.key, user?.id, user?.roles]);
+  }, [user?.id, user?.roles]);
 
   const initials = (user?.full_name || user?.email || "?")
     .split(/[\s@.]/)
@@ -194,11 +157,12 @@ export function AppShell({ children, product = "lms" }) {
 
   return (
     <div className={`app-frame app-frame-${cfg.key} min-h-screen bg-slate-50 lg:grid lg:grid-cols-[272px_1fr]`}>
-      {cfg.key === "lms" && <Suspense fallback={<div className="app-ambient-fallback" aria-hidden="true" />}>
+      <Suspense fallback={<div className="app-ambient-fallback" aria-hidden="true" />}>
         <CareerConstellation mode="ambient" className="app-ambient-canvas" />
-      </Suspense>}
+      </Suspense>
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2 focus:rounded-lg focus:bg-invert-900 focus:text-white focus:text-sm">Skip to content</a>
       <aside
+        data-mobile-open={open ? "true" : "false"}
         className={`app-sidebar fixed inset-y-0 left-0 z-40 w-[272px] text-slate-200 flex flex-col transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
@@ -213,7 +177,7 @@ export function AppShell({ children, product = "lms" }) {
 
         <div className="app-journey-marker mx-4 mt-4 mb-1 px-3 py-2.5">
           <span className="app-journey-dot" aria-hidden="true" />
-          <div className="min-w-0"><p className="text-[10px] uppercase tracking-[.14em] font-bold">{cfg.key === "lms" ? "Your journey" : "Hiring desk"}</p><p className="truncate text-xs mt-0.5">{currentSection(location.pathname, cfg)}</p></div>
+          <div className="min-w-0"><p className="text-[10px] uppercase tracking-[.14em] font-bold">Your journey</p><p className="truncate text-xs mt-0.5">{currentSection(location.pathname, cfg)}</p></div>
         </div>
 
         <nav aria-label={`${cfg.title} navigation`} className="flex-1 px-3 py-4 space-y-1 overflow-y-auto sidebar-scroll">
@@ -244,15 +208,13 @@ export function AppShell({ children, product = "lms" }) {
           )}
         </nav>
 
-        {/* Settings + sign out. Lityra Learn and Lityra Hire are separate accounts,
-            so there is no in-session product switch — signing into the other
-            product means logging in with that account from the home page. */}
+        {/* Account settings and sign out for Lityra Learn. */}
         <div className="px-3 py-2 border-t border-white/10 space-y-1">
           <NavLink to={`${cfg.base}/settings`} onClick={() => setOpen(false)} className={linkClass}>
             <SettingsIcon size={19} strokeWidth={1.75} /> Settings
           </NavLink>
           <button
-            onClick={async () => { await logout(); nav(cfg.key === "drive" ? "/hire/login" : "/learn/login"); }}
+            onClick={async () => { await logout(); nav("/learn/login"); }}
             className={linkClass({ isActive: false }) + " w-full"}
           >
             <LogOut size={19} strokeWidth={1.75} /> Sign out
@@ -328,7 +290,7 @@ export function AppShell({ children, product = "lms" }) {
               animate={{ opacity: 1, y: 0 }}
               exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
               transition={reduceMotion ? { duration: 0 } : { duration: 0.28, ease: [0.2, 0.75, 0.25, 1] }}>
-              {!location.pathname.startsWith("/drive/test/") && <WorkspacePath product={cfg.key} roles={roles} pathname={location.pathname} />}
+              <WorkspacePath roles={roles} pathname={location.pathname} />
               {children}
             </motion.div>
           </AnimatePresence>
