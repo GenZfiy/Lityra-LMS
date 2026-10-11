@@ -533,7 +533,7 @@ input:focus, select:focus, textarea:focus { border-color: #bf984f !important; bo
 .about-answer-label { display:inline-flex; min-width:2rem; justify-content:center; border-radius:999px; padding:.28rem .58rem; background:#f5ead3; color:#79551e; font-size:.72rem; font-weight:850; }
 .about-answer-card h3 { margin:.8rem 0 .45rem; color:#132a47; font-size:1.04rem; font-weight:800; }
 .about-answer-card p,.about-workspaces p,.about-company-intro>p:not(.about-company-tagline),.about-mission-vision p,.about-values-grid p { margin:0; color:#4c5d71; font-size:.9rem; line-height:1.72; }
-.about-workspaces { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; margin-top:1rem; }
+.about-workspaces { display:grid; grid-template-columns:minmax(0,1fr); gap:1rem; margin-top:1rem; }
 .about-workspaces article { display:flex; gap:.85rem; align-items:flex-start; padding:1.25rem; border-radius:16px; background:#102946; color:#efd08e; }
 .about-workspaces h3 { margin:0 0 .35rem; color:white; font-size:1rem; font-weight:800; }.about-workspaces p { color:#d2dce5; }
 .about-company-section { display:grid; grid-template-columns:.88fr 1.12fr; gap:3rem; align-items:center; padding:5rem max(1.5rem,calc((100vw - 1120px)/2)); background:#eaece9; }
@@ -801,7 +801,7 @@ input:focus, select:focus, textarea:focus { border-color: #bf984f !important; bo
 .station-learning { left:3%; top:14%; }
 .station-practice { right:2%; top:32%; animation-delay:.12s !important; }
 .station-evidence { left:11%; top:54%; animation-delay:.24s !important; }
-.station-opportunity { right:6%; bottom:8%; animation-delay:.36s !important; }
+.station-growth { right:6%; bottom:8%; animation-delay:.36s !important; }
 .landing-hero-index { position:absolute; right:0; bottom:54px; display:flex; align-items:center; gap:.7rem; color:#a8b6c1; font:700 .63rem/1 "Space Grotesk",sans-serif; letter-spacing:.12em; }
 .landing-hero-index i { display:block; width:78px; height:1px; background:linear-gradient(90deg,#d3ad69 25%,rgba(211,173,105,.15) 25%); }
 .landing-scroll-cue { position:absolute; left:max(1.5rem,calc((100vw - 1440px)/2)); bottom:47px; display:flex; align-items:center; gap:.8rem; color:#8da0b1; font-size:.67rem; letter-spacing:.09em; text-decoration:none; text-transform:uppercase; }
@@ -842,7 +842,7 @@ input:focus, select:focus, textarea:focus { border-color: #bf984f !important; bo
   .station-learning { left:0; top:3%; }
   .station-practice { right:0; top:26%; }
   .station-evidence { left:2%; top:51%; }
-  .station-opportunity { right:0; bottom:3%; }
+  .station-growth { right:0; bottom:3%; }
   .landing-hero-index { display:none; }
   .landing-scroll-cue { left:1rem; bottom:29px; font-size:.58rem; }
 }
@@ -865,6 +865,31 @@ input:focus, select:focus, textarea:focus { border-color: #bf984f !important; bo
 .landing-hero.is-static .landing-journey-scene .career-constellation-canvas { display:none; }
 .landing-hero.is-static .landing-journey-scene .career-constellation-fallback { display:none; }
 @media(max-width:700px) { .landing-scene-route { left:13%; right:4%; top:75%; transform:rotate(-24deg); } }
+/* Keep the Learn headline legible and the requested two-line rhythm. */
+.landing-hero h1 span,.landing-hero h1 em { display:block; }
+.landing-hero h1 span { white-space:nowrap; }
+.landing-learn-overview { background:#f7f5ef; }
+.landing-overview-eyebrow { margin:0; color:#93671f; font-size:.875rem; font-weight:700; }
+.landing-overview-title { margin:.25rem 0 0; color:#10243a; font:700 clamp(1.5rem,3vw,2.25rem)/1.2 "Space Grotesk",sans-serif; }
+.landing-overview-description { max-width:42rem; margin:.75rem auto 0; color:#4b5a69; font-size:1rem; line-height:1.65; }
+.landing-learn-card { border:1px solid #d8d2c5; background:#fffefa; box-shadow:0 18px 50px rgba(16,36,58,.1); }
+.landing-learn-card > div:first-child p:first-child { color:#10243a; }
+.landing-learn-card > div:first-child p:last-child { color:#586779; }
+.landing-learn-card li { color:#34465a; }
+/* Keep the Learn overview readable even when the app's global dark theme is active. */
+.landing-page > section.landing-learn-overview { width:100%; max-width:none; background:#f7f5ef !important; color:#10243a !important; }
+.landing-page .landing-overview-eyebrow { color:#805711 !important; }
+.landing-page .landing-overview-title { color:#10243a !important; }
+.landing-page .landing-overview-description { color:#40516a !important; }
+.landing-page .landing-learn-card { background:#fffefa !important; border-color:#d8d2c5; }
+.landing-page .landing-learn-card > div:first-child p:first-child { color:#10243a !important; }
+.landing-page .landing-learn-card > div:first-child p:last-child { color:#526176 !important; }
+.landing-page .landing-learn-card li { color:#34465a !important; }
+@media(max-width:1000px) { .landing-hero h1 span { white-space:normal; } }
+@media(max-width:700px) {
+  .landing-hero h1 { font-size:clamp(2.65rem,11vw,4.6rem); line-height:.98; }
+  .landing-hero h1 span { white-space:nowrap; }
+}
 /* Hero station legibility and mobile flow correction. */
 .landing-scene-stations li { background:rgba(5,18,34,.95); border-color:rgba(220,232,241,.32); box-shadow:0 12px 38px rgba(0,0,0,.32); backdrop-filter:blur(12px); }
 .landing-scene-stations strong { color:#fffdf7; }
