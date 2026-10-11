@@ -493,6 +493,7 @@ export const api = {
   trainingParticipants: (batchId) => request(`/lms/v1/training-batches/${batchId}/participants`),
   addTrainingParticipant: (batchId, body) => request(`/lms/v1/training-batches/${batchId}/participants`, { method: "POST", body }),
   createCohort: (cid, body) => request(`/lms/v1/colleges/${cid}/cohorts`, { method: "POST", body }),
+  createBranch: (cid, body) => request(`/lms/v1/colleges/${cid}/branches`, { method: "POST", body }),
 
   // ---- Audit trail (Super Admin) ----
   auditLogs: (params = {}) => {

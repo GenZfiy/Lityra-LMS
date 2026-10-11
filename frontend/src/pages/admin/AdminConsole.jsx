@@ -1,6 +1,6 @@
 import "../../styles/institution-operations-pages.css";
-import { useState } from "react";
-import { CheckCircle2, Upload, Plus, ShieldCheck } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CheckCircle2, Upload, Plus, ShieldCheck, GitBranch, KeyRound } from "lucide-react";
 import { Card, Badge, Button, Field, Input } from "../../components/ui/primitives.jsx";
 import { PageHeader, Loading, DataSource, EmptyState } from "../../components/ui/states.jsx";
 import { useAsync } from "../../hooks/useAsync.js";
@@ -42,7 +42,7 @@ export default function AdminConsole() {
       </section>
 
       <div className="institution-console-tabs flex gap-2 mb-5" role="tablist" aria-label="Institution views">
-        {["overview", "learners"].map((t) => (
+        {["overview", "structure", "learners"].map((t) => (
           <button
             key={t}
             type="button"
@@ -60,10 +60,124 @@ export default function AdminConsole() {
 
       {tab === "overview" ? (
         <div role="tabpanel" tabIndex={0}><Colleges list={colleges.data || []} counts={counts} /></div>
+      ) : tab === "structure" ? (
+        <div role="tabpanel" tabIndex={0}><InstitutionStructure colleges={colleges.data || []} /></div>
       ) : (
         <div role="tabpanel" tabIndex={0}><LearnerRoster /></div>
       )}
     </div></div>
+  );
+}
+
+function InstitutionStructure({ colleges }) {
+  const [collegeId, setCollegeId] = useState(colleges[0]?.id || "");
+  const [branches, setBranches] = useState([]);
+  const [cohorts, setCohorts] = useState([]);
+  const [branchForm, setBranchForm] = useState({ name: "", code: "", category: "cse_allied" });
+  const [cohortForm, setCohortForm] = useState({ branch_id: "", year_no: 1, section: "", size: 0 });
+  const [accessForm, setAccessForm] = useState({ cohort_id: "", label: "" });
+  const [createdCode, setCreatedCode] = useState(null);
+  const [busy, setBusy] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!collegeId && colleges[0]?.id) setCollegeId(colleges[0].id);
+  }, [collegeId, colleges]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!collegeId) { setBranches([]); setCohorts([]); return undefined; }
+    Promise.all([api.collegeBranches(collegeId), api.collegeCohorts(collegeId)])
+      .then(([branchRows, cohortRows]) => {
+        if (cancelled) return;
+        setBranches(Array.isArray(branchRows) ? branchRows : []);
+        setCohorts(Array.isArray(cohortRows) ? cohortRows : []);
+      })
+      .catch((e) => { if (!cancelled) setError(e?.message || "Could not load college structure."); });
+    return () => { cancelled = true; };
+  }, [collegeId]);
+
+  async function submitBranch(e) {
+    e.preventDefault(); setError(""); setBusy("branch");
+    try {
+      const branch = await api.createBranch(collegeId, branchForm);
+      setBranches((rows) => [branch, ...rows]);
+      setCohortForm((form) => ({ ...form, branch_id: form.branch_id || branch.id }));
+      setBranchForm({ name: "", code: "", category: "cse_allied" });
+    } catch (e) { setError(e?.message || "Could not create branch. Check your College Admin access."); }
+    finally { setBusy(""); }
+  }
+
+  async function submitCohort(e) {
+    e.preventDefault(); setError(""); setBusy("cohort");
+    try {
+      const cohort = await api.createCohort(collegeId, {
+        ...cohortForm, year_no: Number(cohortForm.year_no), size: Number(cohortForm.size),
+        section: cohortForm.section.trim() || null,
+      });
+      setCohorts((rows) => [cohort, ...rows]);
+      setAccessForm((form) => ({ ...form, cohort_id: cohort.id }));
+    } catch (e) { setError(e?.message || "Could not create cohort."); }
+    finally { setBusy(""); }
+  }
+
+  async function submitAccessCode(e) {
+    e.preventDefault(); setError(""); setCreatedCode(null); setBusy("access");
+    try {
+      const code = await api.createAccessCode({ cohort_id: accessForm.cohort_id, label: accessForm.label.trim() || null });
+      setCreatedCode(code);
+      setAccessForm((form) => ({ ...form, label: "" }));
+    } catch (e) { setError(e?.message || "Could not create Access ID."); }
+    finally { setBusy(""); }
+  }
+
+  const branchName = (id) => branches.find((b) => b.id === id)?.name || id;
+  return (
+    <div className="space-y-5">
+      <Card className="p-5">
+        <Field label="College"><select className="w-full h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-ink-900" value={collegeId} onChange={(e) => { setCollegeId(e.target.value); setCreatedCode(null); }} required>
+          <option value="">Select a college</option>{colleges.map((college) => <option key={college.id} value={college.id}>{college.name}</option>)}
+        </select></Field>
+        {!colleges.length && <p className="mt-3 text-sm text-amber-700">Create or select a college in Overview first.</p>}
+      </Card>
+
+      {error && <div role="alert" className="rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</div>}
+
+      <div className="grid xl:grid-cols-3 gap-5">
+        <Card className="p-5 h-fit">
+          <h2 className="mb-4 flex items-center gap-2 font-display font-semibold text-ink-900"><GitBranch size={17} /> 1. Create branch</h2>
+          <form onSubmit={submitBranch} className="space-y-3">
+            <Field label="Branch name"><Input required disabled={!collegeId} value={branchForm.name} onChange={(e) => setBranchForm({ ...branchForm, name: e.target.value })} placeholder="Computer Science" /></Field>
+            <Field label="Branch code"><Input required disabled={!collegeId} value={branchForm.code} onChange={(e) => setBranchForm({ ...branchForm, code: e.target.value.toUpperCase() })} placeholder="CSE" /></Field>
+            <Field label="Category"><select className="w-full h-10 rounded-md border border-slate-200 bg-white px-3 text-sm" value={branchForm.category} onChange={(e) => setBranchForm({ ...branchForm, category: e.target.value })}><option value="cse_allied">Computing and allied</option><option value="core">Core engineering</option></select></Field>
+            <Button type="submit" className="w-full" disabled={!collegeId || !!busy}><Plus size={15} /> {busy === "branch" ? "Creating…" : "Create branch"}</Button>
+          </form>
+          <div className="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-500">{branches.length ? branches.map((b) => `${b.name} (${b.code})`).join(" · ") : "No branches yet."}</div>
+        </Card>
+
+        <Card className="p-5 h-fit">
+          <h2 className="mb-4 flex items-center gap-2 font-display font-semibold text-ink-900"><Plus size={17} /> 2. Create cohort</h2>
+          <form onSubmit={submitCohort} className="space-y-3">
+            <Field label="Branch"><select required className="w-full h-10 rounded-md border border-slate-200 bg-white px-3 text-sm" value={cohortForm.branch_id} onChange={(e) => setCohortForm({ ...cohortForm, branch_id: e.target.value })}><option value="">Select branch</option>{branches.map((b) => <option key={b.id} value={b.id}>{b.name} ({b.code})</option>)}</select></Field>
+            <div className="grid grid-cols-2 gap-3"><Field label="Year"><select className="w-full h-10 rounded-md border border-slate-200 bg-white px-3 text-sm" value={cohortForm.year_no} onChange={(e) => setCohortForm({ ...cohortForm, year_no: e.target.value })}>{[1, 2, 3, 4].map((n) => <option key={n} value={n}>Year {n}</option>)}</select></Field><Field label="Section"><Input value={cohortForm.section} onChange={(e) => setCohortForm({ ...cohortForm, section: e.target.value })} placeholder="A" /></Field></div>
+            <Field label="Expected learners"><Input type="number" min="0" value={cohortForm.size} onChange={(e) => setCohortForm({ ...cohortForm, size: e.target.value })} /></Field>
+            <Button type="submit" className="w-full" disabled={!cohortForm.branch_id || !!busy}><Plus size={15} /> {busy === "cohort" ? "Creating…" : "Create cohort"}</Button>
+          </form>
+          <div className="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-500">{cohorts.length ? cohorts.map((c) => `${branchName(c.branch_id)} · Year ${c.year_no}${c.section ? ` ${c.section}` : ""}`).join(" | ") : "No cohorts yet."}</div>
+        </Card>
+
+        <Card className="p-5 h-fit">
+          <h2 className="mb-4 flex items-center gap-2 font-display font-semibold text-ink-900"><KeyRound size={17} /> 3. Generate Access ID</h2>
+          <form onSubmit={submitAccessCode} className="space-y-3">
+            <Field label="Cohort"><select required className="w-full h-10 rounded-md border border-slate-200 bg-white px-3 text-sm" value={accessForm.cohort_id} onChange={(e) => { setAccessForm({ ...accessForm, cohort_id: e.target.value }); setCreatedCode(null); }}><option value="">Select cohort</option>{cohorts.map((c) => <option key={c.id} value={c.id}>{branchName(c.branch_id)} · Year {c.year_no}{c.section ? ` ${c.section}` : ""}</option>)}</select></Field>
+            <Field label="Label (optional)"><Input value={accessForm.label} onChange={(e) => setAccessForm({ ...accessForm, label: e.target.value })} placeholder="Noor's class" /></Field>
+            <Button type="submit" className="w-full" disabled={!accessForm.cohort_id || !!busy}><KeyRound size={15} /> {busy === "access" ? "Generating…" : "Generate Access ID"}</Button>
+          </form>
+          {createdCode?.code && <div className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 p-3"><p className="text-xs font-medium text-emerald-800">Share this class Access ID with students</p><p className="mt-1 select-all font-mono text-lg font-bold tracking-wider text-emerald-950">{createdCode.code}</p></div>}
+        </Card>
+      </div>
+      <p className="text-xs text-slate-500">Students enter the Access ID after signing in. Creating a cohort and code does not enroll a student in the roster; add the student to this college’s learner roster separately.</p>
+    </div>
   );
 }
 
