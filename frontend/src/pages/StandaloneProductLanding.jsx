@@ -121,26 +121,13 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      <section className="relative overflow-hidden bg-invert-950">
-        <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 h-64 w-[42rem] rounded-full bg-amber-500/20 blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.10] bg-grid" />
-        <div className="relative mx-auto max-w-4xl px-5 py-20 text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white leading-[1.1]">Your next chapter<br /><span className="text-amber-400">starts with learning.</span></h2>
-          <p className="mt-4 text-slate-300 max-w-xl mx-auto">Build knowledge, practice with confidence and keep moving toward your goals.</p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button as={Link} to="/learn/register" size="lg" variant="amber">Start learning <ArrowRight size={18} /></Button>
-            <Link to="/about" className="inline-flex items-center gap-2 h-12 px-6 rounded-lg border border-white/25 text-white font-semibold hover:bg-white/10 transition-colors">About Lityra Learn</Link>
-          </div>
-        </div>
-      </section>
-
-      <section aria-labelledby="project-learning-title" className="relative overflow-hidden bg-[#f7f5ef] px-5 py-16 sm:py-20">
+      <section aria-labelledby="project-learning-title" className="lityra-learning-section relative overflow-hidden bg-[#f7f5ef] px-5 py-16 sm:py-20">
         <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#d9b66e]/15 blur-3xl" />
         <div className="relative mx-auto max-w-6xl">
           <div className="max-w-3xl">
             <p className="text-xs font-bold tracking-[.18em] text-[#a8792d]">PROJECT-BASED LEARNING · BEYOND VIBE CODING</p>
             <h2 id="project-learning-title" className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-[#102541] sm:text-4xl lg:text-5xl">Don't Just Build Projects. Understand How They Work.</h2>
-            <div className="mt-6 space-y-4 text-base leading-7 text-[#40516a] sm:text-lg sm:leading-8">
+            <div className="learning-copy mt-6 space-y-4 text-base leading-7 text-[#40516a] sm:text-lg sm:leading-8">
               <p>AI can help you build applications faster. But do you understand the code it generates, how the frontend communicates with the backend, or what happens when something breaks?</p>
               <p>At Lityra, we help you go beyond writing code. Learn system design, frontend and backend development, API integration, databases, authentication, authorization, application security, debugging, testing, and deployment by building real projects.</p>
               <p>Strengthen your programming fundamentals, practice competitive coding, prepare for interviews, and build projects you can proudly showcase on your resume.</p>
@@ -179,21 +166,21 @@ export default function Landing() {
         </div>
       </section>
 
-      <section aria-labelledby="home-learning-philosophy-title" className="relative overflow-hidden bg-[#0a1a30] px-5 py-16 text-white sm:py-20">
+      <section aria-labelledby="home-learning-philosophy-title" className="lityra-learning-section relative overflow-hidden bg-[#0a1a30] px-5 py-16 text-white sm:py-20">
         <div aria-hidden="true" className="pointer-events-none absolute -left-28 top-12 h-80 w-80 rounded-full bg-[#1f6da5]/20 blur-3xl" />
         <div className="relative mx-auto max-w-6xl">
           <div className="max-w-3xl">
             <span className="text-xs font-bold tracking-[.18em] text-[#e2bf71]">OUR LEARNING PHILOSOPHY</span>
             <h2 id="home-learning-philosophy-title" className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">From Vibe Coding to Engineering Confidence</h2>
             <p className="mt-4 font-display text-lg font-semibold leading-7 text-[#e2bf71] sm:text-xl">Build with AI. Understand Every Layer. Own the Result.</p>
-            <div className="mt-6 space-y-4 text-base leading-7 text-[#d1dbe7] sm:text-lg sm:leading-8">
+            <div className="learning-copy mt-6 space-y-4 text-base leading-7 text-[#d1dbe7] sm:text-lg sm:leading-8">
               <p>Software development is changing. AI-powered coding tools make it possible to turn ideas into working prototypes faster than ever. At Lityra, we embrace this progress while believing that the ability to generate code should go hand in hand with the ability to understand it.</p>
               <p>Our approach is built around project-based learning. Students learn by creating real applications, exploring their architecture, connecting their components, and understanding the decisions behind their implementation.</p>
               <p>We help learners understand the complete journey of an application:</p>
             </div>
           </div>
 
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="learning-grid mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <li className="rounded-xl border border-white/10 bg-white/[.06] p-5"><h3 className="font-semibold text-[#f0d28e]">System Design</h3><p className="mt-2 text-sm leading-6 text-[#d1dbe7]">Translate requirements into architecture, components, and data models.</p></li>
             <li className="rounded-xl border border-white/10 bg-white/[.06] p-5"><h3 className="font-semibold text-[#f0d28e]">Frontend Development</h3><p className="mt-2 text-sm leading-6 text-[#d1dbe7]">Understand pages, components, forms, buttons, events, and user interactions.</p></li>
             <li className="rounded-xl border border-white/10 bg-white/[.06] p-5"><h3 className="font-semibold text-[#f0d28e]">Backend Development</h3><p className="mt-2 text-sm leading-6 text-[#d1dbe7]">Learn server-side logic, business rules, request processing, and application behavior.</p></li>
@@ -205,7 +192,13 @@ export default function Landing() {
             <li className="rounded-xl border border-white/10 bg-white/[.06] p-5"><h3 className="font-semibold text-[#f0d28e]">AI-Assisted Development</h3><p className="mt-2 text-sm leading-6 text-[#d1dbe7]">Use AI to accelerate development while reviewing generated code, validating its behavior, and understanding its limitations.</p></li>
           </ul>
 
-          <div className="mt-14 grid gap-8 border-t border-white/15 pt-10 lg:grid-cols-2 lg:gap-14">
+
+          <article className="mt-10 rounded-2xl border border-[#e2bf71]/35 bg-gradient-to-br from-[#112a48] to-[#10203a] p-6 sm:p-8">
+            <span className="text-xs font-bold tracking-[.18em] text-[#e2bf71]">OUR GOAL</span>
+            <p className="mt-3 max-w-4xl text-lg leading-8 text-white">Help learners become developers who can use AI effectively without depending on it blindly — developers who can read code, understand systems, debug applications, improve security, and take ownership of the software they build.</p>
+          </article>
+          <p className="mx-auto mt-9 max-w-4xl text-center leading-7 text-[#d1dbe7]">At Lityra, learning does not stop when the code runs. It continues until you understand why it works, how to improve it, and how to make it more reliable.</p>
+                    <div className="learning-extended mt-14 grid gap-8 border-t border-white/15 pt-10 lg:grid-cols-2 lg:gap-14">
             <article>
               <h3 className="font-display text-2xl font-bold text-white sm:text-3xl">Projects You Can Explain with Confidence</h3>
               <p className="mt-4 leading-7 text-[#d1dbe7]">We want students to build more than prototypes they can demonstrate. We want them to understand the applications they create.</p>
@@ -218,15 +211,22 @@ export default function Landing() {
               <p className="mt-4 leading-7 text-[#d1dbe7]">Lityra brings these foundations together with practical software development so that students can solve problems, build applications, and understand the engineering principles behind them.</p>
             </article>
           </div>
-
-          <article className="mt-10 rounded-2xl border border-[#e2bf71]/35 bg-gradient-to-br from-[#112a48] to-[#10203a] p-6 sm:p-8">
-            <span className="text-xs font-bold tracking-[.18em] text-[#e2bf71]">OUR GOAL</span>
-            <p className="mt-3 max-w-4xl text-lg leading-8 text-white">Help learners become developers who can use AI effectively without depending on it blindly — developers who can read code, understand systems, debug applications, improve security, and take ownership of the software they build.</p>
-          </article>
-          <p className="mx-auto mt-9 max-w-4xl text-center leading-7 text-[#d1dbe7]">At Lityra, learning does not stop when the code runs. It continues until you understand why it works, how to improve it, and how to make it more reliable.</p>
-          <p className="mt-5 text-center font-display text-xl font-bold leading-relaxed text-[#f0d28e] sm:text-2xl">Lityra — Where learning becomes building, building becomes understanding, and understanding becomes engineering.</p>
+<p className="mt-5 text-center font-display text-xl font-bold leading-relaxed text-[#f0d28e] sm:text-2xl">Lityra — Where learning becomes building, building becomes understanding, and understanding becomes engineering.</p>
         </div>
       </section>
+      <section className="relative overflow-hidden bg-invert-950">
+        <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 h-64 w-[42rem] rounded-full bg-amber-500/20 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.10] bg-grid" />
+        <div className="relative mx-auto max-w-4xl px-5 py-20 text-center">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white leading-[1.1]">Your next chapter<br /><span className="text-amber-400">starts with learning.</span></h2>
+          <p className="mt-4 text-slate-300 max-w-xl mx-auto">Build knowledge, practice with confidence and keep moving toward your goals.</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button as={Link} to="/learn/register" size="lg" variant="amber">Start learning <ArrowRight size={18} /></Button>
+            <Link to="/about" className="inline-flex items-center gap-2 h-12 px-6 rounded-lg border border-white/25 text-white font-semibold hover:bg-white/10 transition-colors">About Lityra Learn</Link>
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-slate-100 bg-slate-50/50">
         <div className="mx-auto max-w-6xl px-5 py-8 flex flex-col sm:flex-row items-center justify-between gap-5 text-sm text-slate-400">
           <div className="flex items-center gap-3"><Logo size={72} /><div className="leading-tight"><p className="font-display font-semibold text-ink-900">Lityra Learn</p><p className="text-xs text-slate-500">Write Your Future</p><p className="text-xs text-slate-400">© {new Date().getFullYear()} · All rights reserved.</p></div></div>
