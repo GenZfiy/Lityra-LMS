@@ -980,13 +980,22 @@ input:focus, select:focus, textarea:focus { border-color: #bf984f !important; bo
   .app-sidebar {
     position: fixed !important;
     inset: 0 auto 0 0 !important;
+    z-index: 50 !important;
     width: min(86vw, 320px) !important;
     height: 100vh;
     height: 100dvh;
     max-height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: contain;
+    background-color: #071a32 !important;
     transform: translateX(-100%) !important;
     transition: transform .24s cubic-bezier(.2,.75,.25,1);
   }
+  .app-frame > div.fixed.inset-0 {
+    position: fixed !important;
+    z-index: 40 !important;
+  }
+  .app-workspace-column { position: relative; z-index: 1 !important; }
   .app-sidebar[data-mobile-open="true"] {
     transform: translateX(0) !important;
   }
